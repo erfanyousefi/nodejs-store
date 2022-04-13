@@ -1,7 +1,9 @@
 const JWT = require("jsonwebtoken")
 const createError = require("http-errors")
 const { UserModel } = require("../models/users")
-const { isRef } = require("@hapi/joi/lib/ref")
+const { isRef } = require("@hapi/joi/lib/ref");
+const fs = require("fs");
+const path = require("path");
 const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } = require("./constans")
 const redisClient = require("./init_redis")
 function RandomNumberGenerator(){
@@ -52,9 +54,15 @@ function VerifyRefreshToken(token){
         })
 }
 
+function deleteFileInPublic(fileAddress) {
+    const pathFile = path.join(__dirname, "..", "..", "public", fileAddress)
+    fs.unlinkSync(pathFile)
+}
+
 module.exports = {
     RandomNumberGenerator,
     SignAccessToken,
     SignRefreshToken,
-    VerifyRefreshToken
+    VerifyRefreshToken,
+    deleteFileInPublic
 }
