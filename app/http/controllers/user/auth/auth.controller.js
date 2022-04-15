@@ -8,6 +8,7 @@ const {UserModel} = require("./../../../../models/users")
 class UserAuthController extends Controller {
     async getOtp(req, res, next) {
         try {
+          console.log(req.body)
             await getOtpSchema.validateAsync(req.body);
             const {mobile} = req.body;
             const code = RandomNumberGenerator()

@@ -16,7 +16,7 @@ function SignAccessToken(userId){
             mobile : user.mobile
         };
         const options = {
-            expiresIn : "1h"
+            expiresIn : "1d"
         };
         JWT.sign(payload, ACCESS_TOKEN_SECRET_KEY, options , (err, token) => {
             if(err) reject(createError.InternalServerError("خطای سروری"));
@@ -47,7 +47,8 @@ function VerifyRefreshToken(token){
                 const {mobile} = payload || {};
                 const user = await UserModel.findOne({mobile}, {password : 0, otp : 0})
                 if(!user) reject(createError.Unauthorized("حساب کاربری یافت نشد"))
-                const refreshToken = await redisClient.get(user._id);
+                const refreshToken = await redisClient.get(user?._id || "key_default");
+                if(!refreshToken)  reject(createError.Unauthorized("ورود مجدد به حسابی کاربری انجام نشد"))
                 if(token === refreshToken) return  resolve(mobile);
                 reject(createError.Unauthorized("ورود مجدد به حسابی کاربری انجام نشد"))
             })
@@ -55,8 +56,10 @@ function VerifyRefreshToken(token){
 }
 
 function deleteFileInPublic(fileAddress) {
-    const pathFile = path.join(__dirname, "..", "..", "public", fileAddress)
-    fs.unlinkSync(pathFile)
+    if(fileAddress){
+        const pathFile = path.join(__dirname, "..", "..", "public", fileAddress)
+        if(fs.existsSync(pathFile)) fs.unlinkSync(pathFile)
+    }
 }
 
 module.exports = {
