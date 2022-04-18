@@ -49,7 +49,7 @@ function fileFilter(req, file, cb) {
   return cb(createError.BadRequest("فرمت ارسال شده تصویر صحیح نمیباشد"));
 }
 const maxSize = 1 * 1000 * 1000;
-const uploadFile = multer({ storage, fileFilter, limits: { fileSize: maxSize } });
+const uploadFile = multer({ storage, fileFilter, limits: { fileSize: maxSize } }); 
 module.exports = {
   uploadFile,
 };

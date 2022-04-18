@@ -1,3 +1,4 @@
+const { ref } = require("@hapi/joi/lib/compile");
 const { default: mongoose } = require("mongoose");
 
 const Schema = new mongoose.Schema({
@@ -14,7 +15,8 @@ const Schema = new mongoose.Schema({
     bills : {type : [], default : []},
     discount : {type : Number, default : 0},
     birthday : {type : String},
-    Roles : {type : [String], default : ["USER"]}
+    Roles : {type : [String], default : ["USER"]},
+    Courses : {type: [mongoose.Types.ObjectId], ref : "course", default : []}
 }, {
     timestamps : true,
     toJSON : {

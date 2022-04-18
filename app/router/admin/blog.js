@@ -36,6 +36,27 @@ const router = require("express").Router();
  *                  image:
  *                      type: file
  *                      description: the index picture of blog
+ *          BlogUpdate:
+ *              type: object
+ *              properties:
+ *                  title:
+ *                      type: string
+ *                      description: the title of category
+ *                  short_text:
+ *                      type: string
+ *                      description: the summary of text of blog
+ *                  text:
+ *                      type: string
+ *                      description: the text of blog
+ *                  tags:
+ *                      type: string
+ *                      description: the list of tags for example(tag1#tag2#tag_foo)
+ *                  category:
+ *                      type: string
+ *                      description: the id of category for foreinField in blog
+ *                  image:
+ *                      type: file
+ *                      description: the index picture of blog
  */ 
 
 /**
@@ -79,28 +100,15 @@ router.post("/add",uploadFile.single("image"), stringToArray("tags"), AdminBlogC
  *                  required: true
  *                  name: id
  *                  type: string
- *              -   in: formData
- *                  name: title
- *                  type: string
- *              -   in: formData
- *                  name: text
- *                  type: string
- *              -   in: formData
- *                  name: short_text
- *                  type: string
- *              -   in: formData
- *                  name: tags
- *                  example: tag1#tag2#tag3_foo#foo_bar || str || undefined
- *                  type: string
- *              -   in: formData
- *                  name: category
- *                  type: string
- *              -   in: formData
- *                  name: image
- *                  type: file
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  multipart/form-data:
+ *                      schema:
+ *                          $ref: '#/components/schemas/BlogUpdate'
  *          responses:
- *              201:
- *                  description: created
+ *              200:
+ *                  description: success
  */
 router.patch("/update/:id",uploadFile.single("image"), stringToArray("tags"), AdminBlogController.updateBlogById)
 /**
@@ -136,5 +144,5 @@ router.get("/:id", AdminBlogController.getOneBlogById);
  */
 router.delete("/:id", AdminBlogController.deleteBlogById);
 module.exports = {
-    BlogAdminApiRoutes : router
+    AdminApiBlogRouter : router
 }

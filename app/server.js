@@ -55,7 +55,8 @@ module.exports = class Application {
                 BearerAuth : {
                   type: "http",
                   scheme: "bearer",
-                  bearerFormat: "JWT"
+                  bearerFormat: "JWT",
+                  
                 }
               }
             },

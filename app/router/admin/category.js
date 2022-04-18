@@ -23,13 +23,6 @@ const router = require("express").Router();
  *      post:
  *          tags: [Category(AdminPanel)]
  *          summary: create new category title
- *          parameters:
- *              -   in: header
- *                  example: Bearer token...
- *                  value: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJtb2JpbGUiOiIwOTMzMjI1NTc2OCIsImlhdCI6MTY0OTkyOTQ1MiwiZXhwIjoxNjQ5OTMzMDUyfQ._0Cbs3X-CwhdgFTckpoJCESDl2zJilfv9sRVNnXDK_A
- *                  name: access-token
- *                  type: string
- *                  required: true
  *          requestBody:
  *              required: true
  *              content:
@@ -136,10 +129,15 @@ router.get("/:id", CategoryController.getCategoryById)
  *                  name: id
  *                  type: string
  *                  required : true
- *              -   in: formData
- *                  name: title
- *                  type: string
- *                  required : true
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Category'
  *          responses:
  *              200:
  *                  description: success
@@ -149,5 +147,5 @@ router.get("/:id", CategoryController.getCategoryById)
 router.patch("/update/:id", CategoryController.editCategoryTitle)
 
 module.exports = {
-    CategoryRoutes : router
+    AdminApiCategoryRouter : router
 }
