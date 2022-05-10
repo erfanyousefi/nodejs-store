@@ -10,21 +10,26 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
-    "@prisma/client": "^3.12.0",
-    "auto-bind": "^4.0.0",
-    "bcrypt": "^5.0.1",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "http-errors": "^2.0.0",
-    "joi-phone-number": "^5.1.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.2.8",
-    "morgan": "^1.10.0",
-    "multer": "^1.4.4",
-    "redis": "^4.0.6",
-    "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.3.0"
+    "@hapi/joi": "17.1.1",
+    "@prisma/client": "3.13.0",
+    "auto-bind": "4.0.0",
+    "bcrypt": "5.0.1",
+    "cors": "2.8.5",
+    "dotenv": "16.0.0",
+    "express": "4.17.3",
+    "http-errors": "2.0.0",
+    "jsonwebtoken": "8.5.1",
+    "mongoose": "6.2.8",
+    "morgan": "1.10.0",
+    "multer": "1.4.4",
+    "redis": "4.0.6",
+    "swagger-jsdoc": "6.1.0",
+    "swagger-ui-express": "4.3.0"
+  },
+  "devDependencies": {
+    "@types/hapi__joi": "17.1.8",
+    "@types/http-errors": "1.8.2",
+    "http-status-codes": "2.2.0",
+    "nodemon": "2.0.16"
   }
 }

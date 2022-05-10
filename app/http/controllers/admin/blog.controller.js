@@ -3,6 +3,7 @@ const Controller = require("./../controller")
 const path = require("path");
 const { BlogModel } = require("../../../models/blogs");
 const { deleteFileInPublic } = require("../../../utils/functions");
+const { StatusCodes:HttpStatus} = require("http-status-codes")
 const createError = require("http-errors")
 class BlogController extends Controller {
     async createBlog(req, res, next){
@@ -14,9 +15,9 @@ class BlogController extends Controller {
             const image =  req.body.image
             const author = req.user._id 
             const blog = await BlogModel.create({title,image, text, short_text, category, tags, author})
-            return res.status(201).json({
+            return res.status(HttpStatus.CREATED).json({
                 data : {
-                    statusCode: 201,
+                    statusCode: HttpStatus.CREATED,
                     message : "ایجاد بلاگ با موفقیت انجام شد"
                 }
             })
@@ -29,9 +30,9 @@ class BlogController extends Controller {
         try {
             const {id} = req.params;
             const blog = await this.findBlog(id);
-            return res.status(200).json({
+            return res.status(HttpStatus.OK).json({
                 data : {
-                    statusCode : 200,
+                    statusCode : HttpStatus.OK,
                     blog
                 }
             })
@@ -76,9 +77,9 @@ class BlogController extends Controller {
                     }
                 }
             ])
-            return res.status(200).json({
+            return res.status(HttpStatus.OK).json({
                 data:{
-                    statusCode: 200,
+                    statusCode: HttpStatus.OK,
                     blogs
                 }
             })
@@ -99,9 +100,9 @@ class BlogController extends Controller {
             await this.findBlog(id);
             const result = await BlogModel.deleteOne({_id : id});
             if(result.deletedCount == 0) throw createError.InternalServerError("حذف انجام نشد");
-            return res.status(200).json({
+            return res.status(HttpStatus.OK).json({
                 data : {
-                    statusCode : 200,
+                    statusCode : HttpStatus.OK,
                     message : "حذف مقاله با موفقیت انجام شد"
                 }
             })
@@ -129,9 +130,9 @@ class BlogController extends Controller {
             const updateResult = await BlogModel.updateOne({_id : id}, {$set : data})
             if(updateResult.modifiedCount == 0) throw createError.InternalServerError("به روز رسانی انجام نشد")
 
-            return res.status(200).json({
+            return res.status(HttpStatus.OK).json({
                 data : {
-                    statusCode: 200,
+                    statusCode: HttpStatus.OK,
                     message : "به روز رسانی بلاگ با موفقیت انجام شد"
                 }
             })

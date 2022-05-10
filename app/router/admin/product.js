@@ -56,7 +56,7 @@ const router = require("express").Router();
  *                  category:
  *                      type: string
  *                      description: the title of product
- *                      example: 2500000
+ *                      example: 6279e994c1e47a98d0f356d3
  *                  price:
  *                      type: string
  *                      description: the title of product
@@ -129,9 +129,40 @@ router.post("/add", uploadFile.array("images", 10), stringToArray("tags", "color
  *                  description: success
  */
 router.get("/list",ProductController.getAllProducts)
+/**
+ * @swagger
+ *  /admin/products/{id}:
+ *      get:
+ *          tags: [Product(AdminPanel)]
+ *          summary: get one products
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  description: objectId of product
+ *          responses:
+ *              200:
+ *                  description: success
+ */
+router.get("/:id", ProductController.getOneProduct)
+/**
+ * @swagger
+ *  /admin/products/remove/{id}:
+ *      delete:
+ *          tags: [Product(AdminPanel)]
+ *          summary: delete One products
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  description: objectId of product
+ *          responses:
+ *              200:
+ *                  description: success
+ */
+router.delete("/remove/:id", ProductController.removeProductById)
+
 // router.patch()
-// router.delete()
-// router.get()
 // router.get()
 module.exports = {
     AdminApiProductRouter : router
