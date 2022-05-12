@@ -47,10 +47,10 @@ module.exports = class Application {
             },
             servers: [
               {
-                url: "http://localhost:5000",
+                url: "http://localhost:4000",
               },
               {
-                url: "http://localhost:4000",
+                url: "http://localhost:5000",
               },
             ],
             components : {

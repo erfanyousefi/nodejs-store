@@ -124,7 +124,7 @@ class BlogController extends Controller {
             Object.keys(data).forEach(key => {
                 if(blackListFields.includes(key)) delete data[key]
                 if(typeof data[key] == "string") data[key] = data[key].trim();
-                if(Array.isArray(data[key]) && Array.length > 0 ) data[key] = data[key].map(item => item.trim()) 
+                if(Array.isArray(data[key]) && data[key].length > 0 ) data[key] = data[key].map(item => item.trim()) 
                 if(nullishData.includes(data[key])) delete data[key];
             })
             const updateResult = await BlogModel.updateOne({_id : id}, {$set : data})
