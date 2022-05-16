@@ -1,20 +1,31 @@
 const createError = require("http-errors");
 const { ProductModel } = require("../../../models/products");
-const { deleteFileInPublic, ListOfImagesFromRequest, copyObject, setFeatures } = require("../../../utils/functions");
+const { deleteFileInPublic, ListOfImagesFromRequest, copyObject, setFeatures, deleteInvalidPropertyInObject } = require("../../../utils/functions");
 const {
   createProductSchema,
 } = require("../../validators/admin/product.schema");
 const { ObjectIdValidator } = require("../../validators/public.validator");
 const Controller = require("../controller");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
-const { default: mongoose } = require("mongoose");
-const { equal } = require("@hapi/joi");
+const ProductBlackList = {
+  BOOKMARKS: "bookmarks",
+  LIKES: "likes",
+  DISLIKES: "dislikes",
+  COMMENTS: "comments",
+  SUPPLIER: "supplier",
+  WEIGHT: "weight",
+  WIDTH: "width",
+  LENGTH: "length",
+  HEIGHT: "height",
+  COLORS: "colors"
+}
+Object.freeze(ProductBlackList)
 class ProductController extends Controller {
   async addProduct(req, res, next) {
     try {
       const images = ListOfImagesFromRequest(req?.files || [], req.body.fileUploadPath)
       const productBody = await createProductSchema.validateAsync(req.body);
-      const { title, text, short_text, category, tags, count, price, discount, type, width, height, weight, length, colors } = productBody;
+      const { title, text, short_text, category, tags, count, price, discount, type } = productBody;
       const supplier = req.user._id;
       let features = setFeatures(req.body)
       const product = await ProductModel.create({
@@ -44,25 +55,18 @@ class ProductController extends Controller {
   }
   async editProduct(req, res, next) {
     try {
-      const {id} = req.params;
+      const { id } = req.params;
       const product = await this.findProductById(id)
       const data = copyObject(req.body);
       data.images = ListOfImagesFromRequest(req?.files || [], req.body.fileUploadPath);
       data.features = setFeatures(req.body)
-      let nullishData = ["", " ", "0", 0, null, undefined]
-      let blackListFields = ["bookmarks", "deslikes", "comments", "likes", "supplier", "width", "length", "weight", "height", "colors"]
-      Object.keys(data).forEach(key => {
-        if (blackListFields.includes(key)) delete data[key]
-        if (typeof data[key] == "string") data[key] = data[key].trim();
-        if (Array.isArray(data[key]) && data[key].length > 0) data[key] = data[key].map(item => item.trim())
-        if (Array.isArray(data[key]) && data[key].length == 0) delete data[key]
-        if (nullishData.includes(data[key])) delete data[key];
-      })
-      const updateProductResult = await ProductModel.updateOne({_id : product._id}, {$set : data})
-      if(updateProductResult.modifiedCount == 0) throw {status : HttpStatus.INTERNAL_SERVER_ERROR, message : "خطای داخلی"}
+      let blackListFields = Object.values(ProductBlackList);
+      deleteInvalidPropertyInObject(data, blackListFields)
+      const updateProductResult = await ProductModel.updateOne({ _id: product._id }, { $set: data })
+      if (updateProductResult.modifiedCount == 0) throw { status: HttpStatus.INTERNAL_SERVER_ERROR, message: "خطای داخلی" }
       return res.status(HttpStatus.OK).json({
-        statusCode : HttpStatus.OK,
-        message : "به روز رسانی باموفقیت انجام شد"
+        statusCode: HttpStatus.OK,
+        message: "به روز رسانی باموفقیت انجام شد"
       })
     } catch (error) {
       next(error);
@@ -124,6 +128,8 @@ class ProductController extends Controller {
     return product
   }
 }
+
 module.exports = {
   ProductController: new ProductController(),
 };
+

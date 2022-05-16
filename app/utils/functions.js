@@ -69,20 +69,30 @@ function ListOfImagesFromRequest(files, fileUploadPath) {
     }
 }
 function setFeatures(body) {
-    const {colors, width, weight, height, length} = body;
+    const { colors, width, weight, height, length } = body;
     let features = {};
     features.colors = colors;
-    if(!isNaN(+width) || !isNaN(+height) || !isNaN(+weight) || !isNaN(+length)){
-        if(!width) features.width = 0;
+    if (!isNaN(+width) || !isNaN(+height) || !isNaN(+weight) || !isNaN(+length)) {
+        if (!width) features.width = 0;
         else features.width = +width;
-        if(!height) features.height = 0;
+        if (!height) features.height = 0;
         else features.height = +height;
-        if(!weight) features.weight = 0;
+        if (!weight) features.weight = 0;
         else features.weight = +weight;
-        if(!length) features.length = 0;
+        if (!length) features.length = 0;
         else features.length = +length;
-      }
+    }
     return features
+}
+function deleteInvalidPropertyInObject(data = {}, blackListFields = []) {
+    let nullishData = ["", " ", "0", 0, null, undefined]
+    Object.keys(data).forEach(key => {
+        if (blackListFields.includes(key)) delete data[key]
+        if (typeof data[key] == "string") data[key] = data[key].trim();
+        if (Array.isArray(data[key]) && data[key].length > 0) data[key] = data[key].map(item => item.trim())
+        if (Array.isArray(data[key]) && data[key].length == 0) delete data[key]
+        if (nullishData.includes(data[key])) delete data[key];
+    })
 }
 function copyObject(object) {
     return JSON.parse(JSON.stringify(object))
@@ -95,5 +105,6 @@ module.exports = {
     deleteFileInPublic,
     ListOfImagesFromRequest,
     copyObject,
-    setFeatures
+    setFeatures,
+    deleteInvalidPropertyInObject
 }

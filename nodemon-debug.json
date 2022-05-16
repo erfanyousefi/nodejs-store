@@ -1,0 +1,6 @@
+{
+  "watch": ["app"],
+  "ext": "js",
+  "ignore": ["app/**/*.spec.js"],
+  "exec": "node --inspect-brk -r tsconfig-paths/register -r node/register ./index.js"
+}

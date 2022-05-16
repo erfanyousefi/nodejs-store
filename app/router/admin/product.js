@@ -174,7 +174,6 @@ const router = require("express").Router();
  *      post:
  *          tags: [Product(AdminPanel)]
  *          summary: create and save product
- *          
  *          requestBody:
  *              required: true
  *              content:
@@ -187,6 +186,7 @@ const router = require("express").Router();
  *                  description: created new Product
  */
 router.post("/add", uploadFile.array("images", 10), stringToArray("tags", "colors"),ProductController.addProduct)
+
 /**
  * @swagger
  *  /admin/products/list:

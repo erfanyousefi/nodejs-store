@@ -1,6 +1,5 @@
 const { default: mongoose } = require("mongoose");
 const { CommentSchema } = require("./public.schema");
-
 const ProductSchema = new mongoose.Schema({
     title : {type: String, required : true},
     short_text : {type: String, required : true},
