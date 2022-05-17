@@ -43,8 +43,8 @@ class ProductController extends Controller {
         type
       })
       return res.status(HttpStatus.CREATED).json({
+        statusCode: HttpStatus.CREATED,
         data: {
-          statusCode: HttpStatus.CREATED,
           message: "ثبت محصول با موفقیت انجام شد"
         }
       });
@@ -66,7 +66,9 @@ class ProductController extends Controller {
       if (updateProductResult.modifiedCount == 0) throw { status: HttpStatus.INTERNAL_SERVER_ERROR, message: "خطای داخلی" }
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: "به روز رسانی باموفقیت انجام شد"
+        data : {
+          message: "به روز رسانی باموفقیت انجام شد"
+        }
       })
     } catch (error) {
       next(error);
@@ -86,8 +88,8 @@ class ProductController extends Controller {
         products = await ProductModel.find({})
       }
       return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
         data: {
-          statusCode: HttpStatus.OK,
           products
         }
       })
@@ -101,7 +103,9 @@ class ProductController extends Controller {
       const product = await this.findProductById(id)
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        product
+        data : {
+          product
+        }
       })
     } catch (error) {
       next(error);
@@ -115,7 +119,9 @@ class ProductController extends Controller {
       if (removeProductResult.deletedCount == 0) throw createError.InternalServerError();
       return res.status(HttpStatus.OK).json({
         statusCode: HttpStatus.OK,
-        message: "حذف محصول با موفقیت انجام شد"
+        data : {
+          message: "حذف محصول با موفقیت انجام شد"
+        }
       })
     } catch (error) {
       next(error);

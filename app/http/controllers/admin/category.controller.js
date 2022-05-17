@@ -121,8 +121,8 @@ class CategoryController extends Controller {
         { __v: 0 }
       );
       return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
         data: {
-          statusCode: HttpStatus.OK,
           categories,
         },
       });
@@ -154,8 +154,8 @@ class CategoryController extends Controller {
         },
       ]);
       return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
         data: {
-          statusCode: HttpStatus.OK,
           category,
         },
       });
@@ -170,8 +170,8 @@ class CategoryController extends Controller {
         { __v: 0 }
       );
       return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
         data: {
-          statusCode: HttpStatus.OK,
           parents,
         },
       });
@@ -187,8 +187,8 @@ class CategoryController extends Controller {
         { __v: 0, parent: 0 }
       );
       return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
         data: {
-          statusCode: HttpStatus.OK,
           children,
         },
       });

@@ -68,7 +68,6 @@ router.post("/add", async(req, res, next) => {
             if([undefined, null, 0, "", " ", "0"].includes(data[key])) delete data[key]
             if(key == "id") delete data[key]
         })
-        console.log(req.body)
         // const blog = await prisma.blog.upsert({
         //     where : {id : Number(id)},
         //     create : {title, short_text, text, category_id : parseInt(category_id),updatedAt : Date.now()},
