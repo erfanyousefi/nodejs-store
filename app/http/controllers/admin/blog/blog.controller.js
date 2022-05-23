@@ -1,8 +1,8 @@
-const { createBlogSchema } = require("../../validators/admin/blog.schema")
-const Controller = require("./../controller")
+const { createBlogSchema } = require("../../../validators/admin/blog.schema")
+const Controller = require("../../controller")
 const path = require("path");
-const { BlogModel } = require("../../../models/blogs");
-const { deleteFileInPublic } = require("../../../utils/functions");
+const { BlogModel } = require("../../../../models/blogs");
+const { deleteFileInPublic } = require("../../../../utils/functions");
 const { StatusCodes:HttpStatus} = require("http-status-codes")
 const createError = require("http-errors")
 class BlogController extends Controller {

@@ -1,9 +1,10 @@
-const { CourseModel } = require("../../../models/course");
-const Controller = require("../controller");
+const { CourseModel } = require("../../../../models/course");
+const Controller = require("../../controller");
 const {StatusCodes: HttpStatus} = require("http-status-codes");
 const path = require("path");
-const { createCourseSchema } = require("../../validators/admin/course.schema");
+const { createCourseSchema } = require("../../../validators/admin/course.schema");
 const createHttpError = require("http-errors");
+const { default: mongoose } = require("mongoose");
 class CourseController extends Controller{
     async getListOfCourse(req, res, next){
         try {
@@ -69,6 +70,12 @@ class CourseController extends Controller{
         } catch (error) {
             next(error)
         }
+    }
+    async findCourseById(id){
+        if(!mongoose.isValidObjectId(id)) throw createHttpError.BadRequest("شناسه ارسال شده صحیح نمیباشد")
+        const course = await CourseModel.findById(id);
+        if(!course) throw createHttpError.NotFound("دوره ای یافت نشد");
+        return course
     }
 }
 module.exports = {
