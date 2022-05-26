@@ -4,7 +4,8 @@ const path = require("path");
 const { BlogModel } = require("../../../../models/blogs");
 const { deleteFileInPublic } = require("../../../../utils/functions");
 const { StatusCodes:HttpStatus} = require("http-status-codes")
-const createError = require("http-errors")
+const createError = require("http-errors");
+const { UserModel } = require("../../../../models/users");
 class BlogController extends Controller {
     async createBlog(req, res, next){
         try {
@@ -42,6 +43,7 @@ class BlogController extends Controller {
     }
     async getListOfBlogs(req, res, next){
         try {
+
             const blogs = await BlogModel.aggregate([
                 {$match : {}},
                 {

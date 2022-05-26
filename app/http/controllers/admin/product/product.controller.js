@@ -129,7 +129,7 @@ class ProductController extends Controller {
   }
   async findProductById(productID) {
     const { id } = await ObjectIdValidator.validateAsync({ id: productID });
-    const product = await ProductModel.findById(id)
+    const product = await ProductModel.findById(id);
     if (!product) throw new createError.NotFound("محصولی یافت نشد")
     return product
   }

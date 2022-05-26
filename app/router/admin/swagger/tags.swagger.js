@@ -3,10 +3,12 @@
  *  tags:
  *      -   name : Admin-Panel
  *          description : action of admin (add, remove, edit  and any do)
- *      -   name : Chapter(AdminPanel)
- *          description : managment Chapters section
  *      -   name : Course(AdminPanel)
  *          description : managment course section like manage episode, chapter and courses
+ *      -   name : Chapter(AdminPanel)
+ *          description : managment Chapters section
+ *      -   name : Episode(AdminPanel)
+ *          description : the videos(episode) of Chapter section
  *      -   name: Product(AdminPanel)
  *          description : management product routes
  *      -   name: Blog(AdminPanel)

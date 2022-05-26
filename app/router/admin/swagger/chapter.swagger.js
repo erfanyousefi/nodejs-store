@@ -17,6 +17,15 @@
  *                  text: 
  *                      type: string
  *                      example: the describe about this chapter
+ *          EditChapter:
+ *              type: object     
+ *              properties:
+ *                  title: 
+ *                      type: string
+ *                      example: chapter 1 zero - hero javascript
+ *                  text: 
+ *                      type: string
+ *                      example: the describe about this chapter
  */
 /**
  * @swagger
@@ -70,10 +79,29 @@
  */
 /**
  * @swagger
- *  /admin/chapter/list/{chapterID}:
+ *  /admin/chapter/list/{courseID}:
  *      get:
  *          tags: [Chapter(AdminPanel)]
  *          summary: get Chapters of courses
+ *          parameters:
+ *              -   in: path
+ *                  name: courseID
+ *                  type: string
+ *                  required: true
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
+ *                              $ref: '#/definitions/chaptersOfCourseDefinition'
+ */
+/**
+ * @swagger
+ *  /admin/chapter/remove/{chapterID}:
+ *      patch:
+ *          tags: [Chapter(AdminPanel)]
+ *          summary: remove a Chapter of courses
  *          parameters:
  *              -   in: path
  *                  name: chapterID
@@ -85,5 +113,71 @@
  *                  content:
  *                      application/json:
  *                          schema: 
+ *                              $ref: '#/definitions/publicDefinition'
+ */
+/**
+ * @swagger
+ *  /admin/chapter/list/{courseID}:
+ *      get:
+ *          tags: [Chapter(AdminPanel)]
+ *          summary: get Chapters of courses
+ *          parameters:
+ *              -   in: path
+ *                  name: courseID
+ *                  type: string
+ *                  required: true
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
  *                              $ref: '#/definitions/chaptersOfCourseDefinition'
+ */
+/**
+ * @swagger
+ *  /admin/chapter/remove/{chapterID}:
+ *      patch:
+ *          tags: [Chapter(AdminPanel)]
+ *          summary: remove a Chapter of courses
+ *          parameters:
+ *              -   in: path
+ *                  name: chapterID
+ *                  type: string
+ *                  required: true
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
+ *                              $ref: '#/definitions/publicDefinition'
+ */
+/**
+ * @swagger
+ *  /admin/chapter/update/{chapterID}:
+ *      patch:
+ *          tags: [Chapter(AdminPanel)]
+ *          summary: update detail of Chapter
+ *          parameters:
+ *              -   in: path
+ *                  name: chapterID
+ *                  type: string
+ *                  required: true
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/EditChapter'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/EditChapter'
+ *          responses:
+ *              200:
+ *                  description: success
+ *                  content:
+ *                      application/json:
+ *                          schema: 
+ *                              $ref: '#/definitions/publicDefinition'
  */

@@ -17,6 +17,7 @@
     "cors": "2.8.5",
     "dotenv": "16.0.0",
     "express": "4.17.3",
+    "get-video-duration": "^4.1.0",
     "http-errors": "2.0.0",
     "jsonwebtoken": "8.5.1",
     "locus": "^2.0.4",

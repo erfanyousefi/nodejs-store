@@ -3,7 +3,7 @@ const { CommentSchema } = require("./public.schema");
 const Episodes = mongoose.Schema({
     title: {type: String, required: true},
     text: {type: String, required: true},
-    type: {type: String, default: "free"},
+    type: {type: String, default: "unlock"},
     time: {type: String, required : true}, 
 })
 const Chapter = mongoose.Schema({
@@ -30,6 +30,10 @@ const CourseSchema = new mongoose.Schema({
     teacher : {type: mongoose.Types.ObjectId, ref: "user", required : true},
     chapters : {type: [Chapter], default: []},
     students : {type : [mongoose.Types.ObjectId], default : [], ref: "user"}
+}, {
+    toJSON: {
+        virtuals: true
+    }
 });
 CourseSchema.index({title: "text", short_text: "text", text : "text"})
 module.exports = {
