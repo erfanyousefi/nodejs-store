@@ -108,6 +108,10 @@ function getTime(seconds) {
          houre = h1,
          minutes = Math.round((percent * 60) / 100).toString().substring(0, 2);
     }
+    if(String(houre).length ==1) houre = `0${houre}`
+    if(String(minutes).length ==1) minutes = `0${minutes}`
+    if(String(second).length ==1) second = `0${second}`
+    
     return (houre + ":" + minutes + ":" +second)
 }
 module.exports = {
