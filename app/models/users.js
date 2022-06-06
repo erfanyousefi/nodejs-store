@@ -1,7 +1,7 @@
 const { ref } = require("@hapi/joi/lib/compile");
 const { default: mongoose } = require("mongoose");
 
-const Schema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
     first_name : {type : String},
     last_name : {type : String},
     username : {type : String, lowercase : true},
@@ -23,6 +23,7 @@ const Schema = new mongoose.Schema({
         virtuals : true
     }
 });
+UserSchema.index({first_name: "text", last_name: "text", username: "text", mobile: "text", email: "text"})
 module.exports = {
-    UserModel : mongoose.model("user", Schema)
+    UserModel : mongoose.model("user", UserSchema)
 }

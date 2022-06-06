@@ -5,6 +5,7 @@ const path = require("path");
 const { createCourseSchema } = require("../../../validators/admin/course.schema");
 const createHttpError = require("http-errors");
 const { default: mongoose } = require("mongoose");
+const { copyObject, deleteInvalidPropertyInObject, deleteFileInPublic, getTimeOfCourse } = require("../../../../utils/functions");
 class CourseController extends Controller{
     async getListOfCourse(req, res, next){
         try {
@@ -53,7 +54,6 @@ class CourseController extends Controller{
                 discount, 
                 type,
                 image,
-                time : "00:00:00",
                 status: "notStarted",
                 teacher 
             })
@@ -77,6 +77,33 @@ class CourseController extends Controller{
                 statusCode: HttpStatus.OK,
                 data : {
                     course
+                }
+            })
+        } catch (error) {
+            next(error)
+        }
+    }
+    async updateCourseById(req, res, next){
+        try {
+            const {id} = req.params;
+            const course = await this.findCourseById(id)
+            const data = copyObject(req.body);
+            const {filename, fileUploadPath} = req.body;
+            let blackListFields = ["time", "chapters", "episodes", "students", "bookmarks", "likes", "dislikes", "comments", "fileUploadPath", "filename"]
+            deleteInvalidPropertyInObject(data, blackListFields)
+            if(req.file){
+                data.image = path.join(fileUploadPath, filename)
+                deleteFileInPublic(course.image)
+            }
+            const updateCourseResult = await CourseModel.updateOne({_id: id}, {
+                $set: data
+            })
+            if(!updateCourseResult.modifiedCount) throw new createHttpError.InternalServerError("به روزرسانی دوره انجام نشد")
+
+            return res.status(HttpStatus.OK).json({
+                statusCode: HttpStatus.OK,
+                data: {
+                    message: "به روزرسانی دوره با موفقیت انجام شد"
                 }
             })
         } catch (error) {
