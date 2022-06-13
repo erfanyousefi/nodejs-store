@@ -81,6 +81,16 @@
  */
 /**
  * @swagger
+ *  /admin/user/profile:
+ *      get:
+ *          tags: [Users(AdminPanel)]
+ *          summary: get user profile
+ *          responses :
+ *              200:
+ *                  description: success
+ */
+/**
+ * @swagger
  *  /admin/user/update-profile:
  *      patch:
  *          tags: [Users(AdminPanel)]

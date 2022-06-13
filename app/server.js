@@ -24,7 +24,13 @@ module.exports = class Application {
     this.errorHandling();
   }
   configApplication() {
-
+    this.#app.use((req, res, next) => {
+      console.log(req.url);
+      console.log(req.params);
+      console.log(req.baseUrl);
+      console.log(req.path);
+      next()
+    })
     this.#app.use(cors())
     this.#app.use(morgan("dev"));
     this.#app.use(express.json());

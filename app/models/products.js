@@ -16,7 +16,7 @@ const ProductSchema = new mongoose.Schema({
     count : {type: Number},
     type : {type: String, required : true}, //virtual - physici
     format : {type: String},
-    supplier : {type: mongoose.Types.ObjectId, required : true},
+    supplier : {type: mongoose.Types.ObjectId, ref:"user", required : true},
     features : {type: Object, default : {
         length : "",
         height : "",

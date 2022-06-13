@@ -35,7 +35,7 @@ function SignRefreshToken(userId) {
         };
         JWT.sign(payload, REFRESH_TOKEN_SECRET_KEY, options, async (err, token) => {
             if (err) reject(createError.InternalServerError("خطای سروری"));
-            await redisClient.SETEX(userId, (365 * 24 * 60 * 60), token);
+            await redisClient.SETEX(String(userId), (365 * 24 * 60 * 60), token);
             resolve(token)
         })
     })
@@ -47,14 +47,15 @@ function VerifyRefreshToken(token) {
             const { mobile } = payload || {};
             const user = await UserModel.findOne({ mobile }, { password: 0, otp: 0 })
             if (!user) reject(createError.Unauthorized("حساب کاربری یافت نشد"))
-            const refreshToken = await redisClient.get(user?._id || "key_default");
+            const refreshToken = await redisClient.get(String(user?._id));
+            console.log(refreshToken);
+            console.log(token);
             if (!refreshToken) reject(createError.Unauthorized("ورود مجدد به حسابی کاربری انجام نشد"))
             if (token === refreshToken) return resolve(mobile);
             reject(createError.Unauthorized("ورود مجدد به حسابی کاربری انجام نشد"))
         })
     })
 }
-
 function deleteFileInPublic(fileAddress) {
     if (fileAddress) {
         const pathFile = path.join(__dirname, "..", "..", "public", fileAddress)
