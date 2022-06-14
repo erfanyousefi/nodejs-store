@@ -1,11 +1,16 @@
-const { GraphQLList } = require("graphql")
+const { GraphQLList, GraphQLString } = require("graphql")
 const { BlogModel } = require("../../models/blogs")
 const { BlogType } = require("../typeDefs/blog.type")
 
 const BlogResolver = {
     type : new GraphQLList(BlogType),
-    resolve : async () => {
-        return await BlogModel.find({}).populate([{path : 'author'}, {path: "category"}]);
+    args : {
+        category : {type : GraphQLString}
+    },
+    resolve : async (_, args) => {
+        const {category} = args
+        const findQuery = category? {category} : {}
+        return await BlogModel.find(findQuery).populate([{path : 'author'}, {path: "category"}]);
     }
 }
 module.exports = {
