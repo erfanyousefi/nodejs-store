@@ -1,5 +1,5 @@
  {
-  courses {
+  courses(category : "6279e9afc1e47a98d0f356d6") {
     _id
     title
     text
@@ -7,6 +7,10 @@
     short_text
     price
     discount
+    category {
+      _id
+      title
+    }
     teacher {
       first_name
       last_name
@@ -15,6 +19,22 @@
       title
       episodes {
         title
+      }
+    }
+    comments {
+      _id
+      comment
+      user {
+        first_name
+        last_name
+      }
+      answers{
+        _id
+        comment
+        user{
+          first_name
+          last_name
+        }
       }
     }
   }

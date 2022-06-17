@@ -1,0 +1,30 @@
+mutation {
+  CreateCommentForBlog(
+    comment: "salam azizam", 
+    blogID: "62a5cbfb527282f7b039613f", 
+    parent: "62aae439af5629dc11f2277b"){
+    statusCode
+    data
+  }
+}
+
+mutation {
+  CreateCommentForCourse(
+    comment: "salam azizam", 
+    courseID: "62823134b7b2fdde58f8b6ca",
+  	parent: "62ac380fda9d7c2237cb39bc"
+  ){
+    statusCode
+    data
+  }
+}
+
+mutation {
+  CreateCommentForProduct(
+    comment: "salam azizam", 
+    productID: "6279eaa4579ea4defa9e17a6"
+  ){
+    statusCode
+    data
+  }
+}

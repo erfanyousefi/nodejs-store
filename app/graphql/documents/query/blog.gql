@@ -1,17 +1,38 @@
-{
-    blogs{
-      _id
-      title
-      imageURL
-      short_text
-      text
-      author {
-        first_name
+
+query getBlogs($categoryID: String){
+  StoreBlogs : blogs(category: $categoryID){
+    ...blogFields
+  }
+}
+fragment blogFields on blogType {
+  _id
+    title
+    imageURL
+    short_text
+    text
+  	comments {
+      comment
+      openToComment
+      createdAt
+      user {
+      	first_name
         last_name
-      }
-      category {
-        title
-        _id
+    	}
+      answers{
+       comment
+        user{
+          first_name
+          last_name
+        }
+        createdAt
       }
     }
-  }
+    author {
+      first_name
+      last_name
+    }
+    category {
+      title
+      _id
+    }
+}
