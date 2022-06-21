@@ -22,5 +22,13 @@
       length
       
     }
+    comments{
+      _id
+      comment
+      user {
+        first_name
+        last_name
+      }
+    }
   }
 }

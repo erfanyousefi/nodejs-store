@@ -1,0 +1,16 @@
+mutation {
+  DisLikeProduct(
+    productID: "6279eaa4579ea4defa9e17a6"
+  ){
+    statusCode
+    data
+  }
+}
+mutation {
+  DisLikeCourse(
+    courseID: "62823134b7b2fdde58f8b6ca"
+  ){
+    statusCode
+    data
+  }
+}
