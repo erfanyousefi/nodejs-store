@@ -4,6 +4,7 @@ const { UserModel } = require("../models/users")
 const { isRef } = require("@hapi/joi/lib/ref");
 const fs = require("fs");
 const path = require("path");
+const moment = require("moment-jalali");
 const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } = require("./constans")
 const redisClient = require("./init_redis")
 function RandomNumberGenerator() {
@@ -141,6 +142,104 @@ function getTimeOfCourse(chapters = []){
     if(String(second).length ==1) second = `0${second}`
     return (hour + ":" + minute + ":" +second) 
 }
+function calculateDiscount(price, discount){
+    return Number(price) - ((Number(discount) / 100) * Number(price))
+}
+function invoiceNumberGenerator(){
+    return moment().format("jYYYYjMMjDDHHmmssSSS") + String(process.hrtime()[1]).padStart(9, 0)
+}
+async function getBasketOfUser(userID){
+    const userDetail = await UserModel.aggregate([
+        {
+            $match : { _id: userID }
+        },
+        {
+            $project:{ basket: 1}
+        },
+        {
+            $lookup: {
+                from: "products",
+                localField: "basket.products.productID",
+                foreignField: "_id",
+                as: "productDetail"
+            }
+        },
+        {
+            $lookup: {
+                from: "courses",
+                localField: "basket.courses.courseID",
+                foreignField: "_id",
+                as: "courseDetail"
+            }
+        },
+        {
+            $addFields : {
+                "productDetail" : {
+                    $function: {
+                        body: function(productDetail, products){
+                            return productDetail.map(function(product){
+                                const count = products.find(item => item.productID.valueOf() == product._id.valueOf()).count;
+                                const totalPrice = count * product.price
+                                return {
+                                    ...product,
+                                    basketCount: count,
+                                    totalPrice,
+                                    finalPrice: totalPrice - ((product.discount / 100) * totalPrice)
+                                }
+                            })
+                        },
+                        args: ["$productDetail", "$basket.products"],
+                        lang: "js"
+                    }
+                },
+                "courseDetail" : {
+                    $function: {
+                        body: function(courseDetail){
+                            return courseDetail.map(function(course){
+                                return {
+                                    ...course,
+                                    finalPrice: course.price - ((course.discount / 100) * course.price)
+                                }
+                            })
+                        },
+                        args: ["$courseDetail"],
+                        lang: "js"
+                    }
+                },
+                "payDetail" : {
+                    $function: {
+                        body: function(courseDetail, productDetail, products){
+                            const courseAmount =  courseDetail.reduce(function(total, course){
+                                return total + (course.price - ((course.discount / 100) * course.price))
+                            }, 0)
+                            const productAmount =  productDetail.reduce(function(total, product){
+                                const count = products.find(item => item.productID.valueOf() == product._id.valueOf()).count
+                                const totalPrice = count * product.price;
+                                return total + (totalPrice - ((product.discount / 100) * totalPrice))
+                            }, 0)
+                            const courseIds = courseDetail.map(course => course._id.valueOf())
+                            const productIds = productDetail.map(product => product._id.valueOf())
+                            return {
+                                courseAmount,
+                                productAmount,
+                                paymentAmount : courseAmount + productAmount,
+                                courseIds,
+                                productIds
+                            }
+                        },
+                        args: ["$courseDetail", "$productDetail", "$basket.products"],
+                        lang: "js"
+                    }
+                },
+            }
+        },{
+            $project: {
+                basket: 0
+            }
+        }
+    ]);
+    return copyObject(userDetail)
+}
 module.exports = {
     RandomNumberGenerator,
     SignAccessToken,
@@ -152,5 +251,8 @@ module.exports = {
     setFeatures,
     deleteInvalidPropertyInObject,
     getTime,
-    getTimeOfCourse
+    getTimeOfCourse,
+    calculateDiscount,
+    invoiceNumberGenerator,
+    getBasketOfUser
 }

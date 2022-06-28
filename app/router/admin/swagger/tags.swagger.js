@@ -3,6 +3,8 @@
  *  tags:
  *      -   name : Admin-Panel
  *          description : action of admin (add, remove, edit  and any do)
+ *      -   name: Transactions(AdminPanel)
+ *          description: getAndview All transactions of users
  *      -   name : RBAC(AdminPanel)
  *          description : RoleBaseAccessControll System create and manage role and permissions 
  *      -   name : Users(AdminPanel)

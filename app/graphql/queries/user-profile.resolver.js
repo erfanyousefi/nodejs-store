@@ -1,4 +1,4 @@
-const { GraphQLList, GraphQLString } = require("graphql");
+const { GraphQLList, GraphQLString, GraphQLInt } = require("graphql");
 const { VerifyAccessTokenInGraphQL } = require("../../http/middlewares/verifyAccessToken");
 const { BlogModel } = require("../../models/blogs");
 const { CourseModel } = require("../../models/course");
@@ -8,7 +8,8 @@ const { BlogType } = require("../typeDefs/blog.type");
 const { CourseType } = require("../typeDefs/course.type");
 const { ProductType } = require("../typeDefs/product.type");
 const { AnyType } = require("../typeDefs/public.types");
-
+const {default: axios} = require("axios");
+const { invoiceNumberGenerator, getBasketOfUser } = require("../../utils/functions");
 const getUserBookmarkedBlogs = {
     type : new GraphQLList(BlogType),
     resolve : async (_, args, context) => {
@@ -64,48 +65,7 @@ const getUserBasket = {
     resolve : async (_, args, context) => {
         const {req} = context;
         const user = await VerifyAccessTokenInGraphQL(req)
-        const userDetail = await UserModel.aggregate([
-            {
-                $match : { _id: user._id }
-            },
-            {
-                $project:{ basket: 1}
-            },
-            {
-                $lookup: {
-                    from: "products",
-                    localField: "basket.products.productID",
-                    foreignField: "_id",
-                    as: "productDetail"
-                }
-            },
-            {
-                $lookup: {
-                    from: "courses",
-                    localField: "basket.courses.courseID",
-                    foreignField: "_id",
-                    as: "courseDetail"
-                }
-            },
-            {
-                $addFields : {
-                    "productDetail" : {
-                        $function: {
-                            body: function(productDetail, products){
-                                return (productDetail.map(function(product) {
-                                    return {
-                                        ...product,
-                                        basketcount: products.find(item => item.productID.valueOf() == product._id.valueOf()).count
-                                    }
-                                }))
-                            },
-                            args: ["$productDetail", "$basket.products"],
-                            lang: "js"
-                        }
-                    }
-                }
-            }
-        ]);
+        const userDetail = await getBasketOfUser(user._id)
         return userDetail
     }
 }

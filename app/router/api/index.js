@@ -1,5 +1,6 @@
 const homeController = require("../../http/controllers/api/home.controller");
 const { VerifyAccessToken } = require("../../http/middlewares/verifyAccessToken");
+const { ApiPayment } = require("./payment");
 const router = require("express").Router();
 
 /**
@@ -30,6 +31,7 @@ const router = require("express").Router();
  *              description: not Found
  */
 router.get("/",VerifyAccessToken, homeController.indexPage);
+router.use(ApiPayment);
 module.exports = {
     HomeRoutes : router
 }

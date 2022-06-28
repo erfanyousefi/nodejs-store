@@ -1,6 +1,6 @@
 // const { CategoryApiPrisma } = require("./prisma-api/category.api");
-const { AdminRoutes } = require("./admin/admin.routes");
 const { HomeRoutes } = require("./api");
+const { AdminRoutes } = require("./admin/admin.routes");
 const { DeveloperRoutes } = require("./developer.routes");
 const { UserAuthRoutes } = require("./user/auth");
 // const { blogApiPrisma } = require("./prisma-api/blog.api");

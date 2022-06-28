@@ -28,6 +28,7 @@ const {
 const {
     AdminApiRoleRouter
 } = require("./role");
+const { AdminApiTransactionRouter } = require("./transaction");
 const {
     AdminApiUserRouter
 } = require("./user");
@@ -59,6 +60,9 @@ router.use("/permission",
 router.use("/role",
     checkPermission(PERMISSIONS.ADMIN),
     AdminApiRoleRouter)
+router.use("/transactions",
+    checkPermission(PERMISSIONS.ADMIN),
+    AdminApiTransactionRouter)
 module.exports = {
     AdminRoutes: router
 }
