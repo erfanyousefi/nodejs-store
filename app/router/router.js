@@ -7,6 +7,7 @@ const { UserAuthRoutes } = require("./user/auth");
 const { VerifyAccessToken, chackRole } = require("../http/middlewares/verifyAccessToken");
 const { graphqlHTTP } = require("express-graphql");
 const { graphqlConfig } = require("../utils/graphql.config");
+const { SupportSectionRouter } = require("./support/support.router");
 const router = require("express").Router();
 
 
@@ -16,6 +17,7 @@ router.use("/developer", DeveloperRoutes)
 // router.use("/blogs", blogApiPrisma)
 // router.use("/category", CategoryApiPrisma)
 router.use("/graphql", graphqlHTTP(graphqlConfig))
+router.use("/support", SupportSectionRouter)
 router.use("/", HomeRoutes)
 module.exports = {
     AllRoutes : router

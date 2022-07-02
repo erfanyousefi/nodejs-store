@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 const moment = require("moment-jalali");
 const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } = require("./constans")
-const redisClient = require("./init_redis")
+const redisClient = require("./initRedis")
 function RandomNumberGenerator() {
     return Math.floor((Math.random() * 90000) + 10000)
 }

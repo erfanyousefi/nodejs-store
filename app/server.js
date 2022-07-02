@@ -6,8 +6,11 @@ const createError = require("http-errors");
 const swaggerUI = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const cors = require("cors")
+const ExpressEjsLayouts = require("express-ejs-layouts")
 require("dotenv").config()
 const { AllRoutes } = require("./router/router");
+const { initialSocket } = require("./utils/initSocket");
+const { socketHandler } = require("./socket.io");
 
 module.exports = class Application {
   #app = express();
@@ -17,6 +20,7 @@ module.exports = class Application {
     this.#PORT = PORT;
     this.#DB_URI = DB_URI;
     this.configApplication();
+    this.initTemplateEngine();
     this.initRedis();
     this.connectToMongoDB();
     this.createServer();
@@ -24,13 +28,6 @@ module.exports = class Application {
     this.errorHandling();
   }
   configApplication() {
-    this.#app.use((req, res, next) => {
-      console.log(req.url);
-      console.log(req.params);
-      console.log(req.baseUrl);
-      console.log(req.path);
-      next()
-    })
     this.#app.use(cors())
     this.#app.use(morgan("dev"));
     this.#app.use(express.json());
@@ -82,7 +79,10 @@ module.exports = class Application {
   }
   createServer() {
     const http = require("http");
-    http.createServer(this.#app).listen(this.#PORT, () => {
+    const server = http.createServer(this.#app)
+    const io = initialSocket(server)
+    socketHandler(io)
+    server.listen(this.#PORT, () => {
       console.log("run > http://localhost:" + this.#PORT);
     });
   }
@@ -104,7 +104,15 @@ module.exports = class Application {
     });
   }
   initRedis(){
-    require("./utils/init_redis")
+    require("./utils/initRedis")
+  }
+  initTemplateEngine(){
+    this.#app.use(ExpressEjsLayouts)
+    this.#app.set("view engine", "ejs");
+    this.#app.set("views", "resource/views");
+    this.#app.set("layout extractStyles", true);
+    this.#app.set("layout extractScripts", true);
+    this.#app.set("layout", "./layouts/master");
   }
   createRoutes() {
     this.#app.use(AllRoutes);
@@ -118,8 +126,8 @@ module.exports = class Application {
       const statusCode = error.status || serverError.status;
       const message = error.message || serverError.message;
       return res.status(statusCode).json({
+        statusCode,
         errors: {
-          statusCode,
           message,
         },
       });
