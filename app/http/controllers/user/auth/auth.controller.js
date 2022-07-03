@@ -43,6 +43,7 @@ class UserAuthController extends Controller {
       return res.status(HttpStatus.OK).json({
         statusCode : HttpStatus.OK,
         data: {
+          user,
           accessToken,
           refreshToken
         }
