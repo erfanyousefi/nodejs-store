@@ -2,16 +2,23 @@
     <div class="contact-profile">
         <img src="https://media-exp1.licdn.com/dms/image/C5603AQE3g9gHNfxGrQ/profile-displayphoto-shrink_200_200/0/1645507738281?e=1659571200&v=beta&t=wtwELdT1gp6ICp3UigC2EgutGAQgDP2sZKUx0mjCTwI"
             alt="" />
-        <p>Erfan Yousefi</p>
-        <div class="social-media">
-            <span id="onlinesCount"><strong>افراد آنلاین : </strong><span id="count">10</span></span>
-        </div>
+        <%if(req.user.first_name && req.user.last_name){%>
+            <p><%=req.user.first_name+" "+ req.user.last_name%></p>
+        <%}else if(req.user.username){%>
+            <p><%=req.user.username%></p>
+        <%}else{%>
+            <p><%=req.user.mobile%></p>
+        <%}%>
+        <input type="hidden" id="userID" value="<%=req.user._id%>">
+                    <div class="social-media">
+                        <span id="onlinesCount"><strong>افراد آنلاین : </strong><span id="onlineCount">-</span></span>
+                    </div>
     </div>
     <div id="roomName">
-        <h3>گروه پشتیبانی بوتواستارت </h3>
+        <h3></h3>
     </div>
-    <div class="messages">
-        <ul>
+    <div class="messages pb-5">
+        <ul style="padding-bottom: 50px;">
             <li class="sent">
                 <img src="https://media-exp1.licdn.com/dms/image/C5603AQE3g9gHNfxGrQ/profile-displayphoto-shrink_200_200/0/1645507738281?e=1659571200&v=beta&t=wtwELdT1gp6ICp3UigC2EgutGAQgDP2sZKUx0mjCTwI"
                     alt="" />
@@ -26,8 +33,13 @@
     <div class="message-input">
         <div class="wrap">
             <input type="text" id="messageInput" placeholder="Write your message..." />
+            <input type="file" onchange="sendFile(this.files)"/>
             <i class="fa fa-paperclip attachment" aria-hidden="true"></i>
-            <button class="submit">send</i></button>
+            <div>
+                <button class="submit">send</i></button>
+                <button class="location" onclick="getLocation()">location</i></button>
+            </div>
+
         </div>
     </div>
 </div>

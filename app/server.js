@@ -11,7 +11,12 @@ require("dotenv").config()
 const { AllRoutes } = require("./router/router");
 const { initialSocket } = require("./utils/initSocket");
 const { socketHandler } = require("./socket.io");
-
+const session = require("express-session")
+const cookieParser = require("cookie-parser");
+const { COOKIE_PARSER_SECRET_KEY } = require("./utils/constans");
+const { clientHelper } = require("./utils/client");
+const { uploadFile } = require("./utils/multer");
+const fileUpload = require("express-fileupload");
 module.exports = class Application {
   #app = express();
   #DB_URI;
@@ -20,6 +25,7 @@ module.exports = class Application {
     this.#PORT = PORT;
     this.#DB_URI = DB_URI;
     this.configApplication();
+    this.initClientSession()
     this.initTemplateEngine();
     this.initRedis();
     this.connectToMongoDB();
@@ -113,6 +119,21 @@ module.exports = class Application {
     this.#app.set("layout extractStyles", true);
     this.#app.set("layout extractScripts", true);
     this.#app.set("layout", "./layouts/master");
+    this.#app.use((req, res, next) => {
+      this.#app.locals = clientHelper(req, res);
+      next()
+    })
+  }
+  initClientSession(){
+    this.#app.use(cookieParser(COOKIE_PARSER_SECRET_KEY))
+    this.#app.use(session({
+      secret: COOKIE_PARSER_SECRET_KEY,
+      resave: true,
+      saveUninitialized: true,
+      cookie: {
+        secure: true
+      }
+    }))
   }
   createRoutes() {
     this.#app.use(AllRoutes);

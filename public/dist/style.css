@@ -364,6 +364,7 @@
       overflow: hidden;
       position: relative;
       padding: 0%;
+      padding-bottom: 120px;
     }
     #roomName {
       background: #435f7a;
@@ -422,11 +423,15 @@
     #frame .content .messages::-webkit-scrollbar-thumb {
       background-color: rgba(0, 0, 0, 0.3);
     }
+    #frame .content .messages ul {
+      margin-bottom: 30px;
+      padding-bottom:40px!important;
+    }
     #frame .content .messages ul li {
       display: inline-block;
       clear: both;
       float: left;
-      margin: 15px 15px 5px 15px;
+      margin: -17px 0px 3px -12px;
       width: calc(100% - 25px);
       font-size: 0.9em;
     }
@@ -462,7 +467,7 @@
     }
     #frame .content .message-input {
       position: absolute;
-      bottom: 0;
+      bottom: -5px;
       width: 100%;
       z-index: 99;
     }
@@ -473,7 +478,7 @@
       font-family: "proxima-nova", "Source Sans Pro", sans-serif;
       float: left;
       border: none;
-      width: calc(100% - 100px);
+      width: calc(100% - 150px);
       padding: 11px 32px 10px 8px;
       font-size: 0.8em;
       color: #32465a;
@@ -497,4 +502,8 @@
   
   #onlinesCount{
     margin-right: 20px;
+  }
+  .loginForm{
+    text-align: center;
+    margin: auto auto;
   }
