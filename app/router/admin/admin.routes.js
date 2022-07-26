@@ -16,6 +16,7 @@ const {
 const {
     AdminApiCourseRouter
 } = require("./course");
+const { AdminApiDiscountRouter } = require("./discount");
 const {
     AdminApiEpisodeRouter
 } = require("./episode");
@@ -63,6 +64,9 @@ router.use("/role",
 router.use("/transactions",
     checkPermission(PERMISSIONS.ADMIN),
     AdminApiTransactionRouter)
+router.use("/discount",
+    checkPermission(PERMISSIONS.ADMIN),
+    AdminApiDiscountRouter)
 module.exports = {
     AdminRoutes: router
 }

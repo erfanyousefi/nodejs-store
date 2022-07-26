@@ -1,7 +1,7 @@
 const createHttpError = require("http-errors");
 const { StatusCodes: HttpStatus } = require("http-status-codes");
 const { UserModel } = require("../../../../models/users");
-const { deleteInvalidPropertyInObject } = require("../../../../utils/functions");
+const { deleteInvalidPropertyInObject, getBasketOfUser } = require("../../../../utils/functions");
 const Controller = require("../../controller");
 class UserController extends Controller{
     async getAllUsers(req, res, next){
@@ -44,10 +44,13 @@ class UserController extends Controller{
         try {
             const user = req.user;
             //bill, courses, discount, 
+            const basket = (await getBasketOfUser(user._id))?.[0]
+            console.log(await getBasketOfUser(user._id));
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: {
-                    user
+                    user,
+                    basket
                 }
             })
         } catch (error) {

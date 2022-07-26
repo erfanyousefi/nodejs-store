@@ -6,6 +6,7 @@ const { createCourseSchema } = require("../../../validators/admin/course.schema"
 const createHttpError = require("http-errors");
 const { default: mongoose } = require("mongoose");
 const { copyObject, deleteInvalidPropertyInObject, deleteFileInPublic, getTimeOfCourse } = require("../../../../utils/functions");
+const { isBooleanObject } = require("util/types");
 class CourseController extends Controller{
     async getListOfCourse(req, res, next){
         try {
@@ -41,7 +42,7 @@ class CourseController extends Controller{
             await createCourseSchema.validateAsync(req.body)
             const {fileUploadPath, filename} = req.body;
             const image = path.join(fileUploadPath, filename).replace(/\\/g, "/")
-            let {title, short_text, text, tags, category, price, discount, type} = req.body;
+            let {title, short_text, text, tags, category, price, discount = 0, type, discountedPrice} = req.body;
             const teacher = req.user._id
             if(Number(price) > 0 && type === "free") throw createHttpError.BadRequest("برای دوره ی رایگان نمیتوان قیمت ثبت کرد")
             const course = await CourseModel.create({
@@ -51,6 +52,8 @@ class CourseController extends Controller{
                 tags, 
                 category, 
                 price, 
+                discountedPrice,
+                dicountStatus : false,
                 discount, 
                 type,
                 image,
@@ -115,6 +118,28 @@ class CourseController extends Controller{
         const course = await CourseModel.findById(id);
         if(!course) throw createHttpError.NotFound("دوره ای یافت نشد");
         return course
+    }
+    async changeCourseDiscountStatus(req, res, next) {
+        try {
+            const {id} = req.params;
+            let {discountStatus} = req.body
+            discountStatus = (discountStatus === "true")? true : false
+            if(typeof discountStatus == "boolean") {
+                const result = await CourseModel.updateOne({_id: id}, {$set: {discountStatus}});
+                if(result.modifiedCount > 0){
+                    return res.status(HttpStatus.OK).json({
+                        statusCode: HttpStatus.OK,
+                        data: {
+                            message: discountStatus?  "وضعیت تخفیف ها فعال شد" : 'وضعیت تخفیف ها غیر فعال شد'
+                        }
+                    })
+                }
+                throw createHttpError.BadRequest("تغییر انجام نشد مجددا تلاش کنید") 
+            }
+            throw createHttpError.BadRequest("مقدار ارسال شده صحیح نمیباشد")
+        } catch (error) {
+            next(error)
+        }
     }
 }
 module.exports = {

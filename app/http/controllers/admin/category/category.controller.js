@@ -15,8 +15,8 @@ class CategoryController extends Controller {
       const category = await CategoryModel.create({ title, parent });
       if (!category) throw createError.InternalServerError("خطای داخلی");
       return res.status(HttpStatus.CREATED).json({
+        statusCode: HttpStatus.CREATED,
         data: {
-          statusCode: HttpStatus.CREATED,
           message: "دسته بندی با موفقیت افزوده شد",
         },
       });
@@ -34,8 +34,8 @@ class CategoryController extends Controller {
       if (deleteResult.deletedCount == 0)
         throw createError.InternalServerError("حدف دسته بندی انجام نشد");
       return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
         data: {
-          statusCode: HttpStatus.OK,
           message: "حذف دسته بندی با موفقیت انجام شد",
         },
       });
@@ -56,8 +56,8 @@ class CategoryController extends Controller {
       if (resultOfUpdate.modifiedCount == 0)
         throw createError.InternalServerError("به روزرسانی انجام نشد");
       return res.status(HttpStatus.OK).json({
+        statusCode: HttpStatus.OK,
         data: {
-          statusCode: HttpStatus.OK,
           message: "به روز رسانی با موفقیت انجام شد",
         },
       });

@@ -7,13 +7,21 @@ const Controller = require("../controller");
 const moment = require("moment-jalali");
 const {StatusCodes: HttpStatus} = require("http-status-codes");
 const { default: mongoose } = require("mongoose");
+const { DiscountModel } = require("../../../models/discount");
+const { discountCodeSchema } = require("../../validators/admin/discount.schema");
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 class PaymentController extends Controller{
     async PaymentGateway(req, res, next){
         try {
             const user = req.user
+            const {discountCode} = await discountCodeSchema.validateAsync(req.body);
+            let discount = {};
+            if(discountCode) {
+                discount = await DiscountModel.findOne({code : discountCode});
+                if(!discount) throw createHttpError.BadRequest("کد تخفیف وارد شده وجود ندارد")
+            }
             if(user.basket.courses.length == 0 && user.basket.products.length == 0) throw new createHttpError.BadRequest("سبد خرید شما خالی میباشد")
-            const basket = (await getBasketOfUser(user._id))?.[0];
+            const basket = (await getBasketOfUser(user._id, discount))?.[0];
             if(!basket?.payDetail?.paymentAmount) throw new createHttpError.BadRequest("مشخصات پرداخت یافت نشد")
            const zarinpal_request_url = "https://api.zarinpal.com/pg/v4/payment/request.json";
            const zarinpalGatewayURL = "https://www.zarinpal.com/pg/StartPay"
@@ -46,6 +54,7 @@ class PaymentController extends Controller{
                     statusCode: HttpStatus.OK,
                     data : {
                         code,
+                        basket,
                         gatewayURL: `${zarinpalGatewayURL}/${authority}`
                     }
                 })

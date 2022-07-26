@@ -1,12 +1,10 @@
 const JWT = require("jsonwebtoken")
 const createError = require("http-errors")
 const { UserModel } = require("../models/users")
-const { isRef } = require("@hapi/joi/lib/ref");
 const fs = require("fs");
 const path = require("path");
 const moment = require("moment-jalali");
 const { ACCESS_TOKEN_SECRET_KEY, REFRESH_TOKEN_SECRET_KEY } = require("./constans")
-const redisClient = require("./initRedis")
 function RandomNumberGenerator() {
     return Math.floor((Math.random() * 90000) + 10000)
 }
@@ -36,7 +34,6 @@ function SignRefreshToken(userId) {
         };
         JWT.sign(payload, REFRESH_TOKEN_SECRET_KEY, options, async (err, token) => {
             if (err) reject(createError.InternalServerError("خطای سروری"));
-            await redisClient.SETEX(String(userId), (365 * 24 * 60 * 60), token);
             resolve(token)
         })
     })
@@ -48,9 +45,7 @@ function VerifyRefreshToken(token) {
             const { mobile } = payload || {};
             const user = await UserModel.findOne({ mobile }, { password: 0, otp: 0 })
             if (!user) reject(createError.Unauthorized("حساب کاربری یافت نشد"))
-            const refreshToken = await redisClient.get(String(user?._id));
-            console.log(refreshToken);
-            console.log(token);
+            const {refreshToken} = user
             if (!refreshToken) reject(createError.Unauthorized("ورود مجدد به حسابی کاربری انجام نشد"))
             if (token === refreshToken) return resolve(mobile);
             reject(createError.Unauthorized("ورود مجدد به حسابی کاربری انجام نشد"))
@@ -148,13 +143,18 @@ function calculateDiscount(price, discount){
 function invoiceNumberGenerator(){
     return moment().format("jYYYYjMMjDDHHmmssSSS") + String(process.hrtime()[1]).padStart(9, 0)
 }
-async function getBasketOfUser(userID){
+async function getBasketOfUser(userID, discount = {}){
     const userDetail = await UserModel.aggregate([
         {
             $match : { _id: userID }
         },
         {
             $project:{ basket: 1}
+        },
+        {
+            $addFields: {
+                discountDoc : discount
+            }
         },
         {
             $lookup: {
@@ -173,6 +173,23 @@ async function getBasketOfUser(userID){
             }
         },
         {
+            $addFields: {
+                includedDiscount : {
+                    $function: {
+                        body: function(discountDoc, courses){
+                            const value = courses.find(item => item.courseID.valueOf() == discountDoc.course);
+                            if(value){
+                                return discountDoc.value
+                            }
+                            return 0
+                        },
+                        args: ["$discountDoc", "$basket.courses"],
+                        lang: "js"
+                    }
+                }
+            }
+        },
+        {
             $addFields : {
                 "productDetail" : {
                     $function: {
@@ -180,11 +197,12 @@ async function getBasketOfUser(userID){
                             return productDetail.map(function(product){
                                 const count = products.find(item => item.productID.valueOf() == product._id.valueOf()).count;
                                 const totalPrice = count * product.price
+                                const fixDiscount = product.discountStatus? product.discount: 0
                                 return {
                                     ...product,
                                     basketCount: count,
                                     totalPrice,
-                                    finalPrice: totalPrice - ((product.discount / 100) * totalPrice)
+                                    finalPrice: totalPrice - ((fixDiscount / 100) * totalPrice)
                                 }
                             })
                         },

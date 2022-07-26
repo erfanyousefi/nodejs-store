@@ -8,6 +8,11 @@
  *                  -   free
  *                  -   cash
  *                  -   special             
+ *          Status: 
+ *              type: boolean
+ *              enum:
+ *                  -   true
+ *                  -   false          
  */ 
 /**
  * {
@@ -79,7 +84,7 @@
  *                  -   tags
  *                  -   category
  *                  -   price
- *                  -   discount
+ *                  -   discountedPrice
  *                  -   image
  *                  -   type
  *              properties:
@@ -106,15 +111,26 @@
  *                      type: string
  *                      description: the title of course
  *                      example: 2500000
+ *                  discountedPrice:
+ *                      type: string
+ *                      description: the title of course
+ *                      example: 998000
  *                  discount:
  *                      type: string
  *                      description: the title of course
- *                      example: 20
+ *                      example: 0
  *                  image:
  *                      type: string
  *                      format: binary
  *                  type:
  *                      $ref: '#/components/schemas/Types'
+ *          Edit-discount-course-status:
+ *              type: object
+ *              required: 
+ *                  -   discountStatus
+ *              properties:
+ *                  discountStatus:
+ *                      $ref: '#/components/schemas/Status'
  *          Edit-Course:
  *              type: object
  *              properties:
@@ -196,6 +212,36 @@
  *          responses:
  *              201:
  *                  description: created new course
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              $ref: '#/definitions/publicDefinition'
+ * 
+ */
+/**
+ * @swagger
+ *  /admin/courses/change-discount-status/{id}:
+ *      patch:
+ *          tags: [Course(AdminPanel)]
+ *          summary: edit and save discount-status
+ *          parameters:
+ *              -   in: path
+ *                  name: id
+ *                  type: string
+ *                  required: true
+ *          requestBody:
+ *              required: true
+ *              content:
+ *                  application/x-www-form-urlencoded:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Edit-discount-course-status'
+ *                  application/json:
+ *                      schema:
+ *                          $ref: '#/components/schemas/Edit-discount-course-status'
+ *          
+ *          responses:
+ *              200:
+ *                  description: change discount status
  *                  content:
  *                      application/json:
  *                          schema:

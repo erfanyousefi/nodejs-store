@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
     first_name : {type : String},
     last_name : {type : String},
     username : {type : String, lowercase : true},
-    mobile : {type : String, required : true},
+    mobile : {type : String, required : true, unique: true},
     email : {type : String, lowercase : true},
     password : {type : String},
     otp : {type : Object, default : {
@@ -26,7 +26,8 @@ const UserSchema = new mongoose.Schema({
     bills : {type : [], default : []},
     discount : {type : Number, default : 0},
     birthday : {type : String},
-    token : {type : String, default: ""},
+    accessToken : {type : String, default: ""},
+    refreshToken : {type : String, default: ""},
     Role : {type : String, default : "USER"},
     Courses : {type: [mongoose.Types.ObjectId], ref : "course", default : []},
     Products : {type: [mongoose.Types.ObjectId], ref : "product", default : []},
