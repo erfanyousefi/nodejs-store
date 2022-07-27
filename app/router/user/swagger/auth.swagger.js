@@ -3,22 +3,6 @@
  * @swagger
  *  components:
  *      schemas:
- *          Register:
- *              type: object
- *              required:
- *                  -   first_name
- *                  -   last_name
- *                  -   mobile
- *              properties:
- *                  first_name:
- *                      type: string
- *                      description: the user first_name for signup
- *                  last_name:
- *                      type: string
- *                      description: the user last_name for signup
- *                  mobile:
- *                      type: string
- *                      description: the user mobile for signup
  *          GetOTP:
  *              type: object
  *              required:
@@ -56,33 +40,6 @@
  *      description : user-auth section
  */
 
-
-/**
- * @swagger
- *  /user/register:
- *      post:
- *          tags: [User-Authentication]
- *          summary: register user in userpanel with phone number
- *          description: register in site
- *          requestBody:
- *              required: true
- *              content: 
- *                  application/x-www-form-urlencoded:
- *                      schema:
- *                          $ref: '#/components/schemas/Register'
- *                  application/json:
- *                      schema:
- *                          $ref: '#/components/schemas/Register'
- *          responses:
- *              201: 
- *                  description: Success
- *              400: 
- *                  description: Bad Request
- *              401: 
- *                  description: Unauthorization
- *              500: 
- *                  description: Internal Server Error 
- */
 /**
  * @swagger
  *  /user/get-otp:

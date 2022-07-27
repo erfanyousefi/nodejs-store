@@ -29,8 +29,6 @@ const CourseSchema = new mongoose.Schema({
     dislikes : {type: [mongoose.Types.ObjectId], ref: "user", default : []},
     bookmarks : {type: [mongoose.Types.ObjectId], ref: "user", default : []},
     price : {type: Number, default : 0},
-    discountedPrice : {type: Number, default : 0},
-    discountStatus : {type: Boolean, default : false},
     discount : {type: Number, default : 0},
     type : {type: String, default: "free"/*free, cash, special */, required : true},
     status: {type: String, default: "notStarted" /*notStarted, Completed, Holding*/},

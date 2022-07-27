@@ -27,6 +27,7 @@ module.exports = class Application {
     this.configApplication();
     this.initClientSession()
     this.initTemplateEngine();
+    this.initRedis();
     this.connectToMongoDB();
     this.createServer();
     this.createRoutes();
@@ -107,6 +108,9 @@ module.exports = class Application {
       console.log("disconnected");
       process.exit(0);
     });
+  }
+  initRedis(){
+    require("./utils/initRedis")
   }
   initTemplateEngine(){
     this.#app.use(ExpressEjsLayouts)

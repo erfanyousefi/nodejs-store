@@ -9,8 +9,6 @@ class UserController extends Controller{
             const {search} = req.query;
             const databaseQuery = {};
             if(search) databaseQuery['$text'] = {$search : search}
-            console.log(search);
-            console.log(databaseQuery);
             const users = await UserModel.find(databaseQuery);
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
@@ -44,13 +42,11 @@ class UserController extends Controller{
         try {
             const user = req.user;
             //bill, courses, discount, 
-            const basket = (await getBasketOfUser(user._id))?.[0]
             console.log(await getBasketOfUser(user._id));
             return res.status(HttpStatus.OK).json({
                 statusCode: HttpStatus.OK,
                 data: {
-                    user,
-                    basket
+                    user
                 }
             })
         } catch (error) {
